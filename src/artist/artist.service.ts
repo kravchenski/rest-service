@@ -1,27 +1,96 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { db } from 'src/db';
+import { randomUUID } from 'crypto';
+import { ArtistEntity } from './entities/artist.entity';
+import { TrackEntity } from 'src/track/entities/track.entity';
+import { AlbumEntity } from 'src/album/entities/album.entity';
 
 @Injectable()
 export class ArtistService {
   create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+    const newArtist = {
+      id: randomUUID(),
+      name: createArtistDto.name,
+      grammy: createArtistDto.grammy,
+    };
+
+    db.Artists.push(newArtist);
+
+    return newArtist;
   }
 
   findAll() {
-    return `This action returns all artist`;
+    return db.Artists;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  findById(id: string) {
+    const foundArtist = db.Artists.find((artist) => artist?.id === id);
+
+    if (!foundArtist)
+      throw new NotFoundException(`Artist with ID ${id} is not found`);
+
+    return foundArtist;
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  update(id: string, updateArtistDto: UpdateArtistDto) {
+    const updatedArtistIndex = db.Artists.findIndex(
+      (artist: ArtistEntity) => artist?.id === id,
+    );
+
+    if (updatedArtistIndex === -1)
+      throw new NotFoundException(`Artist with ID ${id} is not found`);
+
+    const artistToUpdate = db.Artists[updatedArtistIndex];
+
+    const updatedArtist: ArtistEntity = {
+      id: artistToUpdate.id,
+      name: updateArtistDto.name,
+      grammy: updateArtistDto.grammy,
+    };
+
+    db.Artists[updatedArtistIndex] = updatedArtist;
+    return updatedArtist;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} artist`;
+  remove(id: string) {
+    const removedArtistIndex = db.Artists.findIndex(
+      (artist) => artist?.id === id,
+    );
+
+    if (removedArtistIndex === -1)
+      throw new NotFoundException(`Album with ID ${id} is not found`);
+
+    const tracksWithRemovedAlbum = db.Tracks.filter(
+      (track: TrackEntity) => track.artistId === id,
+    );
+
+    const albumsWithRemovedArtist = db.Albums.filter(
+      (album: AlbumEntity) => album.artistId === id,
+    );
+
+    if (tracksWithRemovedAlbum.length > 0) {
+      tracksWithRemovedAlbum.forEach((track) => {
+        track.artistId = null;
+      });
+    }
+
+    if (albumsWithRemovedArtist.length > 0) {
+      albumsWithRemovedArtist.forEach((album) => {
+        album.artistId = null;
+      });
+    }
+
+    const removedArtistIndexInFavs = db.Favorites.artists.findIndex(
+      (artist) => artist?.id === id,
+    );
+
+    if (removedArtistIndexInFavs !== -1) {
+      db.Favorites.artists.splice(removedArtistIndexInFavs, 1);
+    }
+
+    db.Artists.splice(removedArtistIndex, 1);
   }
 }
