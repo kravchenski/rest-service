@@ -40,7 +40,7 @@ npm run test
 To run only one of all test suites
 
 ```
-npm run test -- <path to suite>
+npm run test -- <path to suite> 
 ```
 
 To run all test with authorization
