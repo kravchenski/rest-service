@@ -22,11 +22,11 @@ This is a RESTful API for managing a music library, built with **NestJS**. It su
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/kravchenski/rest-service/
+   git clone https://github.com/kravchenski/rest-service.git
    ```
 
    ```bash
-   cd nodejs2025Q2-service
+   cd rest-service
    ```
 
 2. **Install dependencies**:
