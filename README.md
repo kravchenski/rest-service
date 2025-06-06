@@ -32,7 +32,7 @@ This is a RESTful API for managing a music library, built with **NestJS**. It su
 2. **Install dependencies**:
 
    ```bash
-   npm install
+   npm install --force
    ```
 
 3. **Create a `.env` file**:
