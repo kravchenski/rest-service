@@ -22,7 +22,7 @@ This is a RESTful API for managing a music library, built with **NestJS**. It su
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/nadyavalin/nodejs2025Q2-service
+   git clone https://github.com/kravchenski/rest-service/
    ```
 
    ```bash
