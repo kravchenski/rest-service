@@ -26,7 +26,7 @@ Please, create .env file with all necessary variables (check .env.example file) 
 You can either:
 
 ```
-npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts
+npx typeorm-ts-node-commonjs schema:sync -d src/data-source.ts
 ```
 and 
 
