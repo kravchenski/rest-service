@@ -12,7 +12,7 @@ import {
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { UUIDValidationPipe } from 'src/uuid-validation.pipe';
+import { UUIDValidationPipe } from '../uuid-validation.pipe';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,

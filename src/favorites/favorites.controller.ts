@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Param, Delete, HttpCode } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { UUIDValidationPipe } from 'src/uuid-validation.pipe';
+import { UUIDValidationPipe } from '../uuid-validation.pipe';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('favs')
