@@ -36,14 +36,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
   app:
     build:
       context: .
       dockerfile: Dockerfile.app
       target: dev
     container_name: nodejs-rest-service-app-container
-    image: nodejs-rest-service-app
+    image: ${DOCKER_USERNAME}/nodejs-rest-service-app
     restart: always
     depends_on:
       postgres:
@@ -68,8 +67,8 @@ services:
       - sh
       - -c
       - >
-        npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts &&
-        nodemon --watch src && npm run start:dev
+        npx typeorm-ts-node-commonjs schema:sync -d src/data-source.ts &&
+        npm run start:dev
 
 volumes:
   postgres_data:
