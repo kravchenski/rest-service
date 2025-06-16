@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -19,8 +20,10 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../guards/jwt.guard';
 
 @Controller('artist')
+@UseGuards(JwtAuthGuard)
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 

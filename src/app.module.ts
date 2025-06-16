@@ -9,6 +9,11 @@ import { TrackModule } from './track/track.module';
 import { ArtistModule } from './artist/artist.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { RequestInterceptor } from './common/interceptors/request.interceptor';
+import { CustomLoggerService } from './common/services/logger.service';
+import { CustomExceptionFilter } from './common/filters/exception.filter';
 
 @Module({
   imports: [
@@ -23,8 +28,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         port: parseInt(configService.getOrThrow('POSTGRES_PORT'), 10),
         username: configService.getOrThrow('POSTGRES_USER'),
         password: configService.getOrThrow('POSTGRES_PASSWORD'),
-        database: configService.getOrThrow('POSTGRES_DB'), autoLoadEntities: true,
-        synchronize: true,
+        database: configService.getOrThrow('POSTGRES_DB'),
+        autoLoadEntities: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
@@ -33,8 +39,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     TrackModule,
     AlbumModule,
     FavoritesModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    CustomLoggerService,
+    AppService,
+    { provide: APP_INTERCEPTOR, useClass: RequestInterceptor },
+    { provide: APP_FILTER, useClass: CustomExceptionFilter },
+  ],
 })
-export class AppModule { }
+export class AppModule {}
+
